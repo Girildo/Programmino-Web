@@ -1,18 +1,26 @@
-import { CommentType } from "./CommentType";
+import { CommentType } from "./commentType";
 
 
-const SG = {
-    photoPattern: /(?:#(\d)+){1}/,
-    startVotePattern: /#########/,
-    votePattern: /(?:#(\d)+){5}/
-}
+
+
+// const SG = {
+//     photoPattern: {
+
+//     }
+
+//     photoPattern: /(?:#(\d)+){1}/,
+//     startVotePattern: /#########/,
+//     votePattern: /(?:#(\d)+){5}/
+// }
 
 
 export function ParseCommentType(text: string): CommentType {
     const normalized = text.toLowerCase()
-    .replaceAll(' ', '')
-    .replaceAll('\r', '')
-    .replaceAll('\n', '');
+        .replace(/ '/g, '')
+        .replace(/\r/g, '')
+        .replace(/\n/g, '');
+ 
+    console.log(normalized);
 
     const patterns = SG;
     console.log(normalized);

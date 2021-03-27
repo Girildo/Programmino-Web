@@ -2,6 +2,7 @@ import { MutationTree } from "vuex";
 import { MutationTypes } from "./MutationTypes";
 import { state, State } from "./state";
 import Axios from "axios";
+import { UnparsedComment } from "@/lib/models";
 
 export type Mutations<S = State> = {
     [MutationTypes.FETCH_COMMENTS](state: S, payload: { groupId: string; topicId: string }): void;
@@ -33,7 +34,7 @@ export const mutations: MutationTree<State> & Mutations = {
             AuthorName: u.authorname,
             Content: u.message._content,
             ID: u.id,
-        } as FlickrComment))
+        } as UnparsedComment))
         state.fetchingComments = false;
     }
 }

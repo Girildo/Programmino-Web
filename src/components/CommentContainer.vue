@@ -21,9 +21,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import { State } from "vuex-class";
 import Comment from "@/components/Comment.vue";
+import { UnparsedComment } from "@/lib/models";
 
 @Component({ components: { Comment } })
 export default class CommentContainer extends Vue {
-  @State((s) => s.unparsedComments) comments!: FlickrComment[];
+  @State((s) => s.unparsedComments) comments!: UnparsedComment[];
 }
 </script>
