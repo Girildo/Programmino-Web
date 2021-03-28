@@ -1,5 +1,8 @@
+import { PhotoComment, UnparsedComment, VoteComment } from "./models";
 
 
-interface Parser{
-    
+export interface Parser {
+    parsePhoto: (comment: UnparsedComment) => PhotoComment;
+    parseVote: (comment: UnparsedComment) => VoteComment;
+    isStopVotingComment: (comment: UnparsedComment) => boolean;
 }

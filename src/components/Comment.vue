@@ -19,8 +19,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { CommentType } from "@/lib/commentType";
-import { ParseCommentType } from "@/lib/commentParser";
 import { UnparsedComment } from "@/lib/models";
 
 @Component
@@ -28,30 +26,29 @@ export default class Comment extends Vue {
   @Prop()
   comment!: UnparsedComment;
 
-  type = CommentType.IGNORE;
 
-  get icon() {
-    switch (this.type) {
-      case CommentType.PHOTO:
-        return "mdi-camera-outline";
-      case CommentType.START_VOTING:
-        return "mdi-star-circle-outline";
-      case CommentType.VOTE:
-        return "mdi-vote-outline";
-      case CommentType.IGNORE:
-      default:
-        return "mdi-help-circle-outline";
-    }
-  }
-
+  // get icon() {
+  //   switch (this.type) {
+  //     case CommentType.PHOTO:
+  //       return "mdi-camera-outline";
+  //     case CommentType.START_VOTING:
+  //       return "mdi-star-circle-outline";
+  //     case CommentType.VOTE:
+  //       return "mdi-vote-outline";
+  //     case CommentType.IGNORE:
+  //     default:
+  //       return "mdi-help-circle-outline";
+  //   }
+  // }
 
 
 
-  mounted() {
-    const type = ParseCommentType(this.comment.Content);
-    console.log(type);
 
-    this.type = type;
-  }
+  // mounted() {
+  //   const type = ParseCommentType(this.comment.Content);
+  //   console.log(type);
+
+  //   this.type = type;
+  // }
 }
 </script>

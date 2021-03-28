@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex, { Store as VuexStore, CommitOptions } from 'vuex'
 import { state, State } from "./state";
-import { Mutations, mutations } from './mutations';
+import { Mutations, mutations } from './mutations/mutations';
 
 Vue.use(Vuex)
 

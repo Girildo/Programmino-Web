@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { MutationTypes } from "@/store/MutationTypes";
+import { MutationTypes } from "@/store/mutations/MutationTypes";
 import { State } from "vuex-class";
 
 @Component
