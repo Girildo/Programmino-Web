@@ -21,8 +21,9 @@ export type PhotoComment = ParsedComment & {
 }
 
 export type Vote = {
-    Points: Number[];
-    Table: Table;
+    PhotoNumber: number;
+    Points: number;
+    Table?: Table;
 }
 
 export type Table = {

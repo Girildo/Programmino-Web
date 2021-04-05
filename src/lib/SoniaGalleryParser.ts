@@ -1,9 +1,20 @@
 import { CommentType } from "./commentType";
-import { PhotoComment, UnparsedComment, VoteComment } from "./models";
-import { Parser } from "./Parser";
+import { PhotoComment, UnparsedComment, Vote, VoteComment } from "./models";
+import { ParserImpl } from "./Parser";
 
-export const SGParser: Parser = {
-    isStopVotingComment: function (comment: UnparsedComment): boolean {
+export class SGParser extends ParserImpl {
+    /**
+     *
+     */
+
+    private voteCount: number
+    constructor(voteCount = 5) {
+        super();
+        this.voteCount = voteCount;
+    }
+
+
+    public isStopVotingComment(comment: UnparsedComment): boolean {
 
         const text = comment.Content;
         const normalized = text.toLowerCase()
@@ -12,9 +23,9 @@ export const SGParser: Parser = {
             .replace(/\n/g, '');
 
         return /#########/.test(text);
-    },
+    }
 
-    parsePhoto: function (comment: UnparsedComment): PhotoComment {
+    public parsePhoto(comment: UnparsedComment): PhotoComment {
         const text = comment.Content;
 
         const normalized = text.toLowerCase()
@@ -30,10 +41,23 @@ export const SGParser: Parser = {
             return { ...comment, Type: CommentType.PHOTO, Number: number, PhotoURL: url }
         }
         throw new Error(`Comment ${comment} is not in the expected form.`)
-    },
-    parseVote: function (comment: UnparsedComment): VoteComment {
-        return {...comment, Type: CommentType.VOTE, Votes: [{Points: [0], Table: {Name: 'aa'}}]}
     }
 
+    public parseVote(comment: UnparsedComment): VoteComment {
 
+        const pattern = `(?:#(\d+)){${this.voteCount}}`
+        const regexp = new RegExp(pattern);
+
+        if (!regexp.test(comment.Content))
+            throw new Error(`Comment ${comment} is not in the expected form.`);
+
+        const match = comment.Content.match(regexp)?.[0] ?? '';
+        const votePattern = /(?:#(\d+))/;
+        const groups = votePattern.exec(match);
+        const votedPhotos = groups?.map(Number.parseInt);
+
+        const votes: Vote[] = votedPhotos?.map((ph, i) => ({ PhotoNumber: ph, Points: this.voteCount - i })) ?? []
+
+        return { ...comment, Type: CommentType.VOTE, Votes: votes }
+    }
 }
