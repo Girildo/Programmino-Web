@@ -10,11 +10,17 @@ export default new Vuetify({
     locales: { it },
     current: 'it',
   },
-  theme:{
-    themes:{
-      light:{
+  theme: {
+    dark: true,
+    themes: {
+      light: {
         primary: colors.blue.lighten1,
         accent: colors.purple,
+        background: '#dddddd'
+      },
+      dark: {
+        primary: colors.yellow.lighten2,
+        accent: colors.pink.lighten2,
       }
     }
   }

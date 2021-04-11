@@ -1,12 +1,8 @@
 import { CommentType } from "./commentType";
 import { PhotoComment, UnparsedComment, Vote, VoteComment } from "./models";
-import { ParserImpl } from "./Parser";
+import { ParserImpl } from "./parser";
 
 export class SGParser extends ParserImpl {
-    /**
-     *
-     */
-
     private voteCount: number
     constructor(voteCount = 5) {
         super();
@@ -14,7 +10,7 @@ export class SGParser extends ParserImpl {
     }
 
 
-    public isStopVotingComment(comment: UnparsedComment): boolean {
+    public isStartVoting(comment: UnparsedComment): boolean {
 
         const text = comment.Content;
         const normalized = text.toLowerCase()
@@ -40,24 +36,26 @@ export class SGParser extends ParserImpl {
             const url = search.groups[3];
             return { ...comment, Type: CommentType.PHOTO, Number: number, PhotoURL: url }
         }
-        throw new Error(`Comment ${comment} is not in the expected form.`)
+        throw new Error(`Comment ${JSON.stringify(comment, null, 2)} is not in the expected form.`)
     }
 
     public parseVote(comment: UnparsedComment): VoteComment {
+        const normalized = comment.Content.toLowerCase()
+            .replace(/ '/g, '')
+            .replace(/\r/g, '')
+            .replace(/\n/g, '');
 
-        const pattern = `(?:#(\d+)){${this.voteCount}}`
-        const regexp = new RegExp(pattern);
+        const votePatternUnit = '(?:#([0-9]+))'
+        const regexp = new RegExp(votePatternUnit.repeat(this.voteCount));
+        if (!regexp.test(normalized))
+            throw new Error(`Comment ${JSON.stringify(comment, null, 2)} is not in the expected vote form.`);
 
-        if (!regexp.test(comment.Content))
-            throw new Error(`Comment ${comment} is not in the expected form.`);
+        const match = regexp.exec(normalized);
+        if (!match)
+            throw new Error(`Comment ${JSON.stringify(comment, null, 2)} is not in the expected vote form.`);
+        const votedPhotos = match.map(Number.parseInt);
+        const votes = votedPhotos.map((ph, i) => ({PhotoNumber: ph, Points: this.voteCount - i}));
 
-        const match = comment.Content.match(regexp)?.[0] ?? '';
-        const votePattern = /(?:#(\d+))/;
-        const groups = votePattern.exec(match);
-        const votedPhotos = groups?.map(Number.parseInt);
-
-        const votes: Vote[] = votedPhotos?.map((ph, i) => ({ PhotoNumber: ph, Points: this.voteCount - i })) ?? []
-
-        return { ...comment, Type: CommentType.VOTE, Votes: votes }
+        return {...comment, Type: CommentType.VOTE, Votes: votes};
     }
 }

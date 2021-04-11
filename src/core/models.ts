@@ -7,7 +7,7 @@ export type UnparsedComment = {
     ID: string;
 }
 
-type ParsedComment = Omit<UnparsedComment, 'Content'> & {
+export type ParsedComment = Omit<UnparsedComment, 'Content'> & {
     Type: CommentType,
 }
 

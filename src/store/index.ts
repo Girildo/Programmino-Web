@@ -1,14 +1,16 @@
 import Vue from 'vue';
-import Vuex, { Store as VuexStore, CommitOptions } from 'vuex'
+import Vuex, { Store as VuexStore, CommitOptions, DispatchOptions } from 'vuex';
 import { state, State } from "./state";
 import { Mutations, mutations } from './mutations/mutations';
+import { Actions, actions } from "./actions/actions";
 
 Vue.use(Vuex)
 
 export default new VuexStore({
   state,
-  mutations
-})
+  mutations,
+  actions
+});
 
 export type Store = Omit<
   VuexStore<State>,
@@ -19,4 +21,10 @@ export type Store = Omit<
     payload: P,
     options?: CommitOptions
   ): ReturnType<Mutations[K]>;
+} & {
+  dispatch<K extends keyof Actions>(
+    key: K,
+    payload: Parameters<Actions[K]>[1],
+    options?: DispatchOptions
+  ): ReturnType<Actions[K]>;
 };

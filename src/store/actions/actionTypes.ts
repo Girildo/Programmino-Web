@@ -1,0 +1,5 @@
+export enum ActionTypes {
+    FETCH_COMMENTS = "FETCH_COMMENTS",
+    PARSE_COMMENTS = "PARSE_COMMENTS"
+}
+

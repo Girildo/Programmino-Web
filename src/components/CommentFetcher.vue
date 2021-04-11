@@ -1,37 +1,37 @@
 <template>
   <!-- <v-container> -->
-    <v-row>
-      <v-col cols="12">
-        <v-form ref="form" v-model="valid">
-          <v-card :loading="busy">
-            <v-card-title>
-              Per iniziare, inserisci l'URL della pagina di Flickr
-            </v-card-title>
-            <v-card-text>
-              <v-text-field
-                :rules="validation"
-                outlined
-                label="URL"
-                v-model="url"
-              >
-              </v-text-field>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer> </v-spacer>
-              <v-btn type="submit" @click.prevent="valid ? fetch() : validate()">
-                Recupera commenti
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-form>
-      </v-col>
-    </v-row>
+  <v-row>
+    <v-col cols="12">
+      <v-form ref="form" v-model="valid">
+        <v-card :loading="busy">
+          <v-card-title>
+            Per iniziare, inserisci l'URL della pagina di Flickr
+          </v-card-title>
+          <v-card-text>
+            <v-text-field
+              :rules="validation"
+              outlined
+              label="URL"
+              v-model="url"
+            >
+            </v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer> </v-spacer>
+            <v-btn type="submit" @click.prevent="valid ? fetch() : validate()">
+              Recupera commenti
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-col>
+  </v-row>
   <!-- </v-container> -->
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { MutationTypes } from "@/store/mutations/MutationTypes";
+import { ActionTypes } from "../store/actions/actionTypes";
 import { State } from "vuex-class";
 
 @Component
@@ -43,7 +43,7 @@ export default class CommentFetcher extends Vue {
     (s: string) => (s.length > 0 ? true : "Per favore inserisci un URL"),
     (s: string) => (this.urlPattern.test(s) ? true : "Questo URL non è valido"),
   ];
-  @State(state => state.fetchingComments) busy!: boolean;
+  @State((state) => state.fetchingComments) busy!: boolean;
 
   private validate() {
     console.log("aaa");
@@ -60,8 +60,8 @@ export default class CommentFetcher extends Vue {
       groupId,
       topicId,
     };
-
-    this.$store.commit(MutationTypes.FETCH_COMMENTS, payload);
+    this.$store.dispatch(ActionTypes.FETCH_COMMENTS, payload);
+    this.$store.dispatch(ActionTypes.PARSE_COMMENTS);
   }
 }
 </script>
